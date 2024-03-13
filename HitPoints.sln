@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HitPoints.Api", "HitPoints.Api\HitPoints.Api.csproj", "{FD78C8B5-0C98-4ACD-B89A-9E64318BC039}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HitPoints.Contracts", "HitPoints.Contracts\HitPoints.Contracts.csproj", "{09F7AE10-3F9F-4E62-BDE7-42295691BFEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HitPoints.Application", "HitPoints.Application\HitPoints.Application.csproj", "{44FFF1B1-CD4A-484F-8F20-71D018C0640B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FD78C8B5-0C98-4ACD-B89A-9E64318BC039}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD78C8B5-0C98-4ACD-B89A-9E64318BC039}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD78C8B5-0C98-4ACD-B89A-9E64318BC039}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD78C8B5-0C98-4ACD-B89A-9E64318BC039}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09F7AE10-3F9F-4E62-BDE7-42295691BFEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09F7AE10-3F9F-4E62-BDE7-42295691BFEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09F7AE10-3F9F-4E62-BDE7-42295691BFEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09F7AE10-3F9F-4E62-BDE7-42295691BFEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44FFF1B1-CD4A-484F-8F20-71D018C0640B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44FFF1B1-CD4A-484F-8F20-71D018C0640B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44FFF1B1-CD4A-484F-8F20-71D018C0640B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44FFF1B1-CD4A-484F-8F20-71D018C0640B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
