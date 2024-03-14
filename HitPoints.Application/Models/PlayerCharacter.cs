@@ -2,11 +2,10 @@ namespace HitPoints.Application.Models;
 
 public class PlayerCharacter
 {
-    public required Guid Id { get; init; }
     public required string Name { get; init; }
     public required int Level { get; set; }
     public required int HitPoints { get; set; }
-    public required int TemporaryHitPoints { get; set; }
+    public required int TemporaryHitPoints { get; set; } = 0;
     public required IEnumerable<PlayerCharacterClass> Classes { get; set; }
     public required PlayerCharacterStats Stats { get; set; }
     public required List<PlayerCharacterItem>? Items { get; set; } = default;

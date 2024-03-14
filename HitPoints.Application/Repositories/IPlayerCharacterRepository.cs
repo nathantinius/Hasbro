@@ -4,6 +4,7 @@ namespace HitPoints.Application.Repositories;
 
 public interface IPlayerCharacterRepository
 {
-    Task<PlayerCharacter?> GetById(Guid id);
+    Task<PlayerCharacter?> GetByName(string name);
     Task<bool> Update(PlayerCharacter playerCharacter);
+    Task<bool> Create(PlayerCharacter playerCharacter);
 }
