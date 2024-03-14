@@ -2,7 +2,6 @@ namespace HitPoints.Contracts.Responses;
 
 public class PlayerCharacterResponse
 {
-    public required Guid Id { get; init; }
     public required string Name { get; init; }
     public required int Level { get; set; }
     public required int HitPoints { get; set; }
