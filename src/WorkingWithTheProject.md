@@ -32,7 +32,7 @@ This is an API for managing a player character's Hit Points (HP) within DnD. The
    ```bash
    dotnet build
    
-8. Run the Application:
+8. Run the Application: This API runs on port 5000 for http and 5001 for https
    ```bash
    dotnet run
 
