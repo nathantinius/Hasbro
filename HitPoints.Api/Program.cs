@@ -1,6 +1,7 @@
 using FluentValidation;
 using HitPoints.Api;
 using HitPoints.Api.Mapping;
+using HitPoints.Api.SeedData;
 using HitPoints.Application;
 using HitPoints.Application.Database;
 
@@ -14,6 +15,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplication();
 builder.Services.AddDatabase(config["Database:ConnectionString"]!);
+builder.Services.AddSingleton<Seed>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<IApiMarker>(ServiceLifetime.Singleton);
 
@@ -29,9 +31,13 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseMiddleware<ValidationMappingMiddleware>();
+
 app.MapControllers();
 
 var dbInitializer = app.Services.GetRequiredService<DbInitializer>();
 await dbInitializer.InitializeAsync();
+
+var seedData = app.Services.GetRequiredService<Seed>();
+await seedData.Execute();
 
 app.Run();
