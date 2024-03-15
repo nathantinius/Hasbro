@@ -59,9 +59,8 @@ public class HitPointsController: ControllerBase
                 player.TemporaryHitPoints = await _hitPointsService.AddTemporary(request.Value, player);
                 hitPointsMessage = $"{player.Name} received {request.Value} temporary hit points!";
                 break;
-            default:
-                return BadRequest(
-                    "Your trying to update HP with an invalid action. The actions allowed are \"heal\", \"damage\", and \"temporary\"");
+            default: 
+                return null;
         }
 
         var updatedPlayer = await _playerCharacterService.Update(player);
