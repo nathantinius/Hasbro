@@ -19,7 +19,19 @@ public class HitPointsController: ControllerBase
         _hitPointsService = hitPointsService;
         _updateHitPointsValidator = updateHitPointsValidator;
     }
-
+    
+    
+    /// <summary>
+    /// Takes a name as a query parameter and returns a playerCharacter's HitPoints
+    /// </summary>
+    /// <param name="name">The name of the playerCharacter</param>
+    /// <returns>
+    /// {
+    ///     name: String,
+    ///     hitPoints: Int,
+    ///     teporaryHitPoints
+    /// }
+    /// </returns>
     [HttpGet(ApiEndpoints.HitPoints.Get)]
     public async Task<IActionResult> GetHp([FromQuery] GetHitPointsRequest request)
     {
@@ -28,6 +40,19 @@ public class HitPointsController: ControllerBase
         return Ok(response);
     }
     
+    /// <summary>
+    /// Receives a Request body and returns
+    /// </summary>
+    /// <param name="name">The name of the playerCharacter being affected</param>
+    /// <param name="action">heal, damage, or temporary</param>
+    /// <param name="value">the hp value associated with the action</param>
+    /// <param name="damageType">Bludgeoning, Piercing, Slashing, Fire, Cold, Acid, Thunder, Lightning, Poison, Radiant, Necrotic, Psychic, Force</param>
+    /// <returns>
+    /// {
+    ///     message: String,
+    ///     playerCharacter
+    /// }
+    /// </returns>
     [HttpPut(ApiEndpoints.HitPoints.Update)]
     public async Task<IActionResult> UpdateHp([FromBody] UpdateHitPointsRequest request)
     {
