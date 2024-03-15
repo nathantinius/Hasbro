@@ -1,6 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7CA17406-2F56-4598-8068-53F1119E3ABA}"
+	ProjectSection(SolutionItems) = preProject
+		src\ReadMe.md = src\ReadMe.md
+		src\WorkingWithTheProject.md = src\WorkingWithTheProject.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{EFFFAA5E-3520-4D0D-B377-244ECCA6E2DE}"
 EndProject
@@ -9,6 +13,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HitPoints.Application", "src\HitPoints.Application\HitPoints.Application.csproj", "{470B9120-6A5A-486D-A754-F099BF4EB423}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HitPoints.Api", "src\HitPoints.Api\HitPoints.Api.csproj", "{4C95B339-4661-4BDF-8BD4-6780F63C9E69}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HitPoints.Api.Tests.Integration", "test\HitPoints.Api.Tests.Integration\HitPoints.Api.Tests.Integration.csproj", "{F9CD6592-E427-4DE2-900F-7F504101AE11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,10 +34,15 @@ Global
 		{4C95B339-4661-4BDF-8BD4-6780F63C9E69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C95B339-4661-4BDF-8BD4-6780F63C9E69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C95B339-4661-4BDF-8BD4-6780F63C9E69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9CD6592-E427-4DE2-900F-7F504101AE11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9CD6592-E427-4DE2-900F-7F504101AE11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9CD6592-E427-4DE2-900F-7F504101AE11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9CD6592-E427-4DE2-900F-7F504101AE11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9A226CF6-31E8-486C-9D1F-DB1EE8DEC3ED} = {7CA17406-2F56-4598-8068-53F1119E3ABA}
 		{470B9120-6A5A-486D-A754-F099BF4EB423} = {7CA17406-2F56-4598-8068-53F1119E3ABA}
 		{4C95B339-4661-4BDF-8BD4-6780F63C9E69} = {7CA17406-2F56-4598-8068-53F1119E3ABA}
+		{F9CD6592-E427-4DE2-900F-7F504101AE11} = {EFFFAA5E-3520-4D0D-B377-244ECCA6E2DE}
 	EndGlobalSection
 EndGlobal

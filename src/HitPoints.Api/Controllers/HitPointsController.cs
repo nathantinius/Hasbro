@@ -2,6 +2,7 @@ using FluentValidation;
 using HitPoints.Api.Mapping;
 using HitPoints.Application.Services;
 using HitPoints.Contracts.Requests;
+using HitPoints.Contracts.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HitPoints.Api.Controllers;
@@ -36,6 +37,10 @@ public class HitPointsController: ControllerBase
     public async Task<IActionResult> GetHp([FromQuery] GetHitPointsRequest request)
     {
         var player = await _playerCharacterService.GetByName(request.Name);
+        if (player is null)
+        {
+            return NotFound();
+        }
         var response = player.MapToHitPointsResponse();
         return Ok(response);
     }
@@ -65,12 +70,12 @@ public class HitPointsController: ControllerBase
         string hitPointsMessage;
         object result;
         
-        switch (request.Action)
+        switch (request.Action.ToLower())
         {
             case "damage":
-                int damageDealt = await _hitPointsService.DealDamage(request.DamageType, request.Value, player);
+                int damageDealt = await _hitPointsService.DealDamage(request.DamageType!.ToLower(), request.Value, player);
                 hitPointsMessage =
-                    await _hitPointsService.BuildDamageMessage(request.DamageType, damageDealt, request.Value, player);
+                    await _hitPointsService.BuildDamageMessage(request.DamageType.ToLower(), damageDealt, request.Value, player);
                 int leftover = Math.Max(damageDealt - currentTemporaryHitPoints, 0);
                 player.TemporaryHitPoints = Math.Max(currentTemporaryHitPoints - damageDealt, 0);
                 player.HitPoints = Math.Max(currentHitPoints - leftover, 0);
@@ -95,7 +100,7 @@ public class HitPointsController: ControllerBase
         }
         
         var response = updatedPlayer.MapToResponse();
-        result = new { message = hitPointsMessage, response };
+        result = new UpdateHitPointResponse { Message = hitPointsMessage, PlayerCharacter = response };
         return Ok(result);
     }
 }

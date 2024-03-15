@@ -30,7 +30,7 @@ public class HitPointsValidator : AbstractValidator<UpdateHitPointsRequest>
             .GreaterThanOrEqualTo(0)
             .WithMessage("You can't use negative values when updating HP");
 
-        When(r => r.Action == "damage", () =>
+        When(r => r.Action.ToLower() == "damage", () =>
         {
             RuleFor(r => r.DamageType)
                 .NotEmpty()
@@ -51,12 +51,12 @@ public class HitPointsValidator : AbstractValidator<UpdateHitPointsRequest>
 
     private bool BeInAvailableActions(string action)
     {
-        return availableActions.Contains(action);
+        return availableActions.Contains(action.ToLower());
     }
 
     private bool BeInAvailableDamageTypes(string damageType)
     {
-        return availableDamageTypes.Contains(damageType);
+        return availableDamageTypes.Contains(damageType.ToLower());
     }
 
 }
