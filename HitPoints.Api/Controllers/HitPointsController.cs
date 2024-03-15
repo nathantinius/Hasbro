@@ -1,6 +1,6 @@
+using FluentValidation;
 using HitPoints.Api.Mapping;
-using HitPoints.Application.Models;
-using HitPoints.Application.Repositories;
+using HitPoints.Application.Services;
 using HitPoints.Contracts.Requests;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,61 +9,21 @@ namespace HitPoints.Api.Controllers;
 [ApiController]
 public class HitPointsController: ControllerBase
 {
-    private readonly IPlayerCharacterRepository _playerCharacterRepository;
+    private readonly IPlayerCharacterService _playerCharacterService;
+    private readonly IHitPointsService _hitPointsService;
+    private readonly IValidator<UpdateHitPointsRequest> _updateHitPointsValidator;
 
-    public HitPointsController(IPlayerCharacterRepository playerCharacterRepository)
+    public HitPointsController(IPlayerCharacterService playerCharacterService, IHitPointsService hitPointsService, IValidator<UpdateHitPointsRequest> updateHitPointsValidator)
     {
-        _playerCharacterRepository = playerCharacterRepository;
-    }
-    
-    private int GetDamageDealtPercentage(string damageType, PlayerCharacter playerCharacter)
-    {
-        foreach (var defense in playerCharacter.Defenses!)
-        {
-            if (defense.Type == damageType)
-            {
-                switch (defense.Defense)
-                {
-                    case "immunity":
-                        return 0;
-                    case "resistance":
-                        return 2;
-                    default:
-                        return 1;
-                }
-            }
-        }
-        return 1;
-    }
-
-    private int CalculateDamageDealt(string damageType, int damageValue, PlayerCharacter playerCharacter)
-    {
-        
-        int damageDealtPercentage = GetDamageDealtPercentage(damageType, playerCharacter);
-        
-        if (damageDealtPercentage == 0)
-        {
-            return 0;
-        }
-
-        int damageDealt = damageValue / damageDealtPercentage;
-        return damageDealt;
-    }
-    
-    //ENDPOINTS START HERE ---------------------------------------//
-
-    [HttpPost(ApiEndpoints.Characters.Create)]
-    public async Task<IActionResult> CreateCharacter([FromBody] CreateCharacterRequest request)
-    {
-        var playerCharacter = request.MapToPlayerCharacter();
-        var result = await _playerCharacterRepository.Create(playerCharacter);
-        return Ok(result);
+        _playerCharacterService = playerCharacterService;
+        _hitPointsService = hitPointsService;
+        _updateHitPointsValidator = updateHitPointsValidator;
     }
 
     [HttpGet(ApiEndpoints.HitPoints.Get)]
     public async Task<IActionResult> GetHp([FromQuery] GetHitPointsRequest request)
     {
-        var player = await _playerCharacterRepository.GetByName(request.Name);
+        var player = await _playerCharacterService.GetByName(request.Name);
         var response = player.MapToHitPointsResponse();
         return Ok(response);
     }
@@ -71,53 +31,47 @@ public class HitPointsController: ControllerBase
     [HttpPut(ApiEndpoints.HitPoints.Update)]
     public async Task<IActionResult> UpdateHp([FromBody] UpdateHitPointsRequest request)
     {
-        var player = await _playerCharacterRepository.GetByName(request.Name);
-        if (player is null)
-        {
-            return BadRequest("What were you attacking?");
-        }
+        await _updateHitPointsValidator.ValidateAndThrowAsync(request);
+        
+        var player = await _playerCharacterService.GetByName(request.Name);
 
         int currentHitPoints = player.HitPoints;
         int currentTemporaryHitPoints = player.TemporaryHitPoints;
-        string hitPointsMessage = null;
+        string hitPointsMessage;
         object result;
         
-        switch (request.Type)
+        switch (request.Action)
         {
             case "damage":
-                int damageDealt = CalculateDamageDealt(request.DamageType, request.Value, player);
-                if (damageDealt == 0)
-                {
-                    result = new { message = $"{player.Name} is immune to {request.DamageType} and took 0 points of {request.DamageType} damage.", player };
-                    return Ok(result);
-                } else if (damageDealt == request.Value / 2)
-                {
-                    hitPointsMessage = $"{player.Name} is resistant to {request.DamageType} and took {damageDealt} points of {request.DamageType} damage";
-                }
-                else
-                {
-                    hitPointsMessage = $"{player.Name} took {request.Value} points of {request.DamageType} damage";
-                }
+                int damageDealt = await _hitPointsService.DealDamage(request.DamageType, request.Value, player);
+                hitPointsMessage =
+                    await _hitPointsService.BuildDamageMessage(request.DamageType, damageDealt, request.Value, player);
                 int leftover = Math.Max(damageDealt - currentTemporaryHitPoints, 0);
                 player.TemporaryHitPoints = Math.Max(currentTemporaryHitPoints - damageDealt, 0);
                 player.HitPoints = Math.Max(currentHitPoints - leftover, 0);
                 break;
             case "heal":
-                //TODO: Discuss with team on how we should deal with the characters HP maximum.
-                player.HitPoints += request.Value;
+                player.HitPoints = await _hitPointsService.Heal(request.Value, player);
                 hitPointsMessage = $"{player.Name} received {request.Value} points of healing!";
                 break;
             case "temporary":
-                player.TemporaryHitPoints += request.Value;
+                player.TemporaryHitPoints = await _hitPointsService.AddTemporary(request.Value, player);
                 hitPointsMessage = $"{player.Name} received {request.Value} temporary hit points!";
                 break;
             default:
                 return BadRequest(
-                    "Your trying to update HP with an invalid type. The types allowed are \"heal\", \"damage\", and \"temporary\"");
+                    "Your trying to update HP with an invalid action. The actions allowed are \"heal\", \"damage\", and \"temporary\"");
         }
 
-        await _playerCharacterRepository.Update(player);
-        result = new { message = hitPointsMessage, player };
+        var updatedPlayer = await _playerCharacterService.Update(player);
+
+        if (updatedPlayer is null)
+        {
+            return NotFound();
+        }
+        
+        var response = updatedPlayer.MapToResponse();
+        result = new { message = hitPointsMessage, response };
         return Ok(result);
     }
 }

@@ -3,14 +3,9 @@ namespace HitPoints.Api;
 public static class ApiEndpoints
 {
     private const string ApiBase = "api";
-
-    public static class Characters
-    {
-        private const string Base = $"{ApiBase}/characters";
-
-        public const string Create = Base;
-    }
     
+    //TODO: Discuss with Team if we want to break up the update endpoint into multiple endpoints
+    //An argument could be made for splitting but it means the client needs to request multiple Api Endpoints vs simply changing the payload.
     public static class HitPoints
     {
         private const string Base = $"{ApiBase}/hp";

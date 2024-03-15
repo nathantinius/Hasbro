@@ -1,12 +1,12 @@
 namespace HitPoints.Contracts.Data;
 
-public class PlayerCharacterItem
+public class PlayerCharacterItemDto
 {
     public required string Name { get; init; }
-    public required ItemModifier Modifier { get; init; }
+    public required ItemModifierDto Modifier { get; init; }
 }
 
-public class ItemModifier
+public class ItemModifierDto
 {
     public required string AffectedObject { get; init; }
     public required string AffectedValue { get; init; }

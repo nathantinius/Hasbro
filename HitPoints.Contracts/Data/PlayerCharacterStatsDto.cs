@@ -1,6 +1,6 @@
 namespace HitPoints.Contracts.Data;
 
-public class PlayerCharacterStats
+public class PlayerCharacterStatsDto
 {
     public required int Strength { get; set; }
     public required int Dexterity { get; set; }

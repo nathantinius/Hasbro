@@ -1,6 +1,6 @@
 namespace HitPoints.Contracts.Data;
 
-public class PlayerCharacterClass
+public class PlayerCharacterClassDto
 {
     public required string Name { get; init; }
     public required int HitDiceValue { get; init; }

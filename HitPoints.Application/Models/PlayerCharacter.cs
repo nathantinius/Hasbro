@@ -8,8 +8,8 @@ public class PlayerCharacter
     public required int TemporaryHitPoints { get; set; } = 0;
     public required IEnumerable<PlayerCharacterClass> Classes { get; set; }
     public required PlayerCharacterStats Stats { get; set; }
-    public required List<PlayerCharacterItem>? Items { get; set; } = default;
-    public required List<PlayerCharacterDefense>? Defenses { get; set; } = default;
+    public required IEnumerable<PlayerCharacterItem>? Items { get; set; } = default;
+    public required IEnumerable<PlayerCharacterDefense>? Defenses { get; set; } = default;
 }
 
 public class PlayerCharacterClass

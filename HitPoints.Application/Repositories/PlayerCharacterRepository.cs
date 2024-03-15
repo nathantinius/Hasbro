@@ -13,14 +13,81 @@ public class PlayerCharacterRepository : IPlayerCharacterRepository
         _dbConnectionFactory = dbConnectionFactory;
     }
 
-    public Task<PlayerCharacter?> GetByName(string name)
+    public async Task<PlayerCharacter?> GetByName(string name)
     {
-        return null;
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+        var playerCharacter = await connection.QuerySingleOrDefaultAsync<PlayerCharacter>(
+            new CommandDefinition("""
+                                  select * from player_characters where LOWER(name) = @name
+                                  """, new { name })
+        );
+
+        if (playerCharacter is null)
+        {
+            return null;
+        }
+
+        var classes = await connection.QueryAsync<PlayerCharacterClass>(
+            new CommandDefinition("""
+                                  select * from player_character_classes where LOWER(charactername) = @name
+                                  """, new { name })
+        );
+        
+        var stats = await connection.QuerySingleOrDefaultAsync<PlayerCharacterStats>(
+            new CommandDefinition("""
+                                  select * from player_character_stats where LOWER(charactername) = @name
+                                  """, new { name })
+        );
+        
+        var items = await connection.QueryAsync<PlayerCharacterItem>(
+            new CommandDefinition("""
+                                  select * from player_character_items where LOWER(charactername) = @name
+                                  """, new { name })
+        );
+
+        if (items != null)
+        {
+            foreach (var item in items)
+            {
+                var itemModifier = await connection.QuerySingleOrDefaultAsync<ItemModifier>(
+                    new CommandDefinition("""
+                                          select * from item_modifier where itemName = @name
+                                          """, new { name = item.Name })
+                );
+
+                item.Modifier = itemModifier;
+            }
+        }
+        
+        var defenses = await connection.QueryAsync<PlayerCharacterDefense>(
+            new CommandDefinition("""
+                                  select * from player_character_defenses where LOWER(charactername) = @name
+                                  """, new { name })
+        );
+        
+        playerCharacter.Classes = classes;
+        playerCharacter.Stats = stats!;
+        playerCharacter.Items = items;
+        playerCharacter.Defenses = defenses;
+
+        return playerCharacter;
     }
 
-    public Task<bool> Update(PlayerCharacter playerCharacter)
+    public async Task<bool> Update(PlayerCharacter playerCharacter)
     {
-        return null;
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+        using var transaction = connection.BeginTransaction();
+
+        var result = await connection.ExecuteAsync(
+            new CommandDefinition("""
+                                  update player_characters set hitpoints = @HitPoints, temporaryhitpoints = @TemporaryHitPoints
+                                  where name = @Name
+                                  """, playerCharacter)
+        );
+
+        transaction.Commit();
+        
+        return result > 0;
     }
 
     public async Task<bool> Create(PlayerCharacter playerCharacter)
