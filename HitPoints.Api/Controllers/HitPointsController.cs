@@ -1,6 +1,5 @@
 using FluentValidation;
 using HitPoints.Api.Mapping;
-using HitPoints.Application.Models;
 using HitPoints.Application.Services;
 using HitPoints.Contracts.Requests;
 using Microsoft.AspNetCore.Mvc;
